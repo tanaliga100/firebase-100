@@ -6,7 +6,7 @@ const Header: React.FC<IProps> = () => {
   return (
     <Wrapper>
       <h1>
-        FIrebase + <span>100</span>
+        FIrebase + <span>Auth</span>
       </h1>
     </Wrapper>
   );
