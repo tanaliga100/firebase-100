@@ -78,3 +78,19 @@ body {
   background-color: rgba(128, 128, 128, 0.103);
   color: white;
 }
+
+.light {
+  background-color: white;
+  color: black;
+}
+
+.dark {
+  background-color: black;
+  color: white;
+}
+
+.app {
+  font-family: Arial, sans-serif;
+  padding: 20px;
+  transition: background-color 0.9s, color 0.9s;
+}

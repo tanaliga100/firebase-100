@@ -1,45 +1,38 @@
 import styled from "styled-components";
+import { useTheme } from "../context/AuthContext";
 
 interface IProps {
-  handleAuth: () => void;
-  photo: string | null;
-  displayName: string | null;
-  authName: string | null;
+  handleAuth?: () => void;
+  photo?: string | null;
+  displayName?: string | null;
+  authName?: string | null;
 }
 
-const Header: React.FC<IProps> = (props) => {
-  console.log(props);
+const Header: React.FC<IProps> = () => {
+  const { theme } = useTheme();
 
   return (
-    <Wrapper>
+    <Wrapper theme={theme}>
       <h1>
-        FIrebaseCrud + <span>Auth</span>
+        FIrebase + <span>Theming</span>
       </h1>
-      <section>
-        {props.displayName && (
-          <span>
-            Welcome, <p>{props.displayName}</p>
-          </span>
-        )}
-        {props.photo && <img src={props.photo} width={30} height={30} />}
-        <button onClick={props.handleAuth}>{props.authName}</button>
-      </section>
     </Wrapper>
   );
 };
 
 export default Header;
 
-const Wrapper = styled.div`
+const Wrapper = styled.div<{ theme: string }>`
   display: flex;
   padding: 4rem;
   flex-direction: row;
   align-items: center;
   padding: 0 1rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 6px 8px rgba(0, 0, 0, 0.15);
   justify-content: space-between;
-  background: black;
+  background: ${(props) => (props.theme === "light" ? "black" : "white")};
   font-size: larger;
-  color: white;
+  color: ${(props) => (props.theme === "light" ? "white" : "black")};
 
   span {
     color: #aae63a;

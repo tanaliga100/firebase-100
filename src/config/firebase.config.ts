@@ -29,7 +29,6 @@ onAuthStateChanged(auth, (user) => {
   if (user === null) {
     console.log("No User");
   } else {
-    console.log(user);
-    return user;
+    console.log("User Logged out", user);
   }
 });
