@@ -1,29 +1,13 @@
 import styled from "styled-components";
 
-interface IProps {
-  handleAuth: () => void;
-  photo: string | null;
-  displayName: string | null;
-  authName: string | null;
-}
+interface IProps {}
 
-const Header: React.FC<IProps> = (props) => {
-  console.log(props);
-
+const Header: React.FC<IProps> = () => {
   return (
     <Wrapper>
       <h1>
-        FIrebaseCrud + <span>Auth</span>
+        FIrebase + <span>100</span>
       </h1>
-      <section>
-        {props.displayName && (
-          <span>
-            Welcome, <p>{props.displayName}</p>
-          </span>
-        )}
-        {props.photo && <img src={props.photo} width={30} height={30} />}
-        <button onClick={props.handleAuth}>{props.authName}</button>
-      </section>
     </Wrapper>
   );
 };
