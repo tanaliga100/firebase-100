@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { useTheme } from "../context/AuthContext";
 
+
 interface IProps {
   handleAuth?: () => void;
   photo?: string | null;
@@ -10,11 +11,16 @@ interface IProps {
 
 const Header: React.FC<IProps> = () => {
   const { theme } = useTheme();
+=======
+interface IProps {}
 
+const Header: React.FC<IProps> = () => {
   return (
     <Wrapper theme={theme}>
       <h1>
+
         FIrebase + <span>Theming</span>
+
       </h1>
     </Wrapper>
   );
