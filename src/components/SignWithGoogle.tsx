@@ -9,13 +9,18 @@ const SignWithGoogle = () => {
   //     closeModal();
   //     return () => closeModal;
   //   }, 1000);
+
   return (
-    <GoogleSignInButton onClick={() => googleSignInHandler()}>
+    <GoogleSignInButton
+      onClick={() => {
+        googleSignInHandler();
+        closeModal();
+      }}
+    >
       Sign in with Google
     </GoogleSignInButton>
   );
 };
-
 export default SignWithGoogle;
 
 const GoogleSignInButton = styled.button`
