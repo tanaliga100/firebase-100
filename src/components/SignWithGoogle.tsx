@@ -1,7 +1,19 @@
 import styled from "styled-components";
+import { useAuth } from "../context/AuthContext";
+import { useModal } from "../context/ModalContext";
 
 const SignWithGoogle = () => {
-  return <GoogleSignInButton>Sign in with Google</GoogleSignInButton>;
+  const { googleSignInHandler } = useAuth();
+  const { closeModal } = useModal();
+  setTimeout(() => {
+    closeModal();
+    return () => closeModal;
+  }, 1000);
+  return (
+    <GoogleSignInButton onClick={() => googleSignInHandler()}>
+      Sign in with Google
+    </GoogleSignInButton>
+  );
 };
 
 export default SignWithGoogle;

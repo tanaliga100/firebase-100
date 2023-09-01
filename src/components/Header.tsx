@@ -1,16 +1,26 @@
 import styled from "styled-components";
+import { useAuth } from "../context/AuthContext";
 import { useModal } from "../context/ModalContext";
 
 interface IProps {}
 
 const Header: React.FC<IProps> = () => {
   const { openModal } = useModal();
+  const { photo, user, hasUser, logoutHandler } = useAuth();
+
+  console.log("header", user);
+
   return (
     <Wrapper>
       <h1>
         FIrebase + <span>Auth</span>
       </h1>
-      <button onClick={() => openModal()}>Register / Login</button>
+      {hasUser && <pre> Welcome, {user as string}</pre>}
+      {photo && <img src={photo} alt="dp" width={30} height={30} />}
+      {hasUser && <button onClick={() => logoutHandler()}>Logout</button>}
+      {!hasUser && (
+        <button onClick={() => openModal()}>Register / Login</button>
+      )}
     </Wrapper>
   );
 };

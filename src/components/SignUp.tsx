@@ -1,5 +1,6 @@
 import { useState } from "react";
 import styled from "styled-components";
+import { useAuth } from "../context/AuthContext";
 import { useModal } from "../context/ModalContext";
 
 const SignUpContainer = styled.div`
@@ -39,16 +40,24 @@ const SubmitButton = styled.button`
 `;
 
 const SignUp = () => {
-  const { toSignIn } = useModal();
-
+  const { toSignIn, closeModal } = useModal();
+  const { signUpHandler } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Handle form submission here
+
     console.log("Email:", email);
-    console.log("Password:", password);
+    console.log("Passwodr:", password);
+    await signUpHandler(email, password);
+
+    setEmail("");
+    setPassword("");
+    setTimeout(() => {
+      closeModal();
+    }, 1500);
   };
 
   return (
