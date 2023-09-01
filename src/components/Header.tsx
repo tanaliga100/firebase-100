@@ -1,13 +1,16 @@
 import styled from "styled-components";
+import { useModal } from "../context/ModalContext";
 
 interface IProps {}
 
 const Header: React.FC<IProps> = () => {
+  const { openModal } = useModal();
   return (
     <Wrapper>
       <h1>
         FIrebase + <span>Auth</span>
       </h1>
+      <button onClick={() => openModal()}>Register / Login</button>
     </Wrapper>
   );
 };
