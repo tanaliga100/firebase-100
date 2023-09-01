@@ -6,7 +6,7 @@ interface IProps {}
 
 const Header: React.FC<IProps> = () => {
   const { openModal } = useModal();
-  const { photo, user, hasUser, logoutHandler } = useAuth();
+  const { user, hasUser, logoutHandler } = useAuth();
 
   console.log("header", user);
 
@@ -16,7 +16,7 @@ const Header: React.FC<IProps> = () => {
         FIrebase + <span>Auth</span>
       </h1>
       {hasUser && <pre> Welcome, {user as string}</pre>}
-      {photo && <img src={photo} alt="dp" width={30} height={30} />}
+      {/* {photo && <img src={photo} alt="dp" width={30} height={30} />} */}
       {hasUser && <button onClick={() => logoutHandler()}>Logout</button>}
       {!hasUser && (
         <button onClick={() => openModal()}>Register / Login</button>

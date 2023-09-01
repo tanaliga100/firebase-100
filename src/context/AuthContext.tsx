@@ -17,7 +17,7 @@ export interface IAuthContext {
   logoutHandler: () => void;
   googleSignInHandler: () => void;
   error?: unknown | string;
-  photo: React.ReactNode | unknown | string;
+  photo: unknown | string;
 }
 
 const AuthContext = createContext<IAuthContext | undefined>(undefined);
