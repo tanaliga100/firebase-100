@@ -13,7 +13,7 @@ import { MdDarkMode, MdOutlineDarkMode } from "react-icons/md";
 const Header: React.FC<IProps> = () => {
   const { toggleTheme, theme } = useTheme();
   return (
-    <Wrapper theme={theme}>
+    <Wrapper theme={theme} className={`app ${theme}`}>
       <h1>
         FIrebase + <span>FireStore</span>
       </h1>
