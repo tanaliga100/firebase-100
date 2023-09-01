@@ -8,19 +8,27 @@ const Header: React.FC<IProps> = () => {
   const { openModal } = useModal();
   const { user, hasUser, logoutHandler } = useAuth();
 
-  console.log("header", user);
-
   return (
     <Wrapper>
       <h1>
         FIrebase + <span>Auth</span>
       </h1>
-      {hasUser && <pre> Welcome, {user as string}</pre>}
-      {/* {photo && <img src={photo} alt="dp" width={30} height={30} />} */}
-      {hasUser && <button onClick={() => logoutHandler()}>Logout</button>}
-      {!hasUser && (
-        <button onClick={() => openModal()}>Register / Login</button>
-      )}
+      <section>
+        <div>
+          {hasUser && (
+            <pre>
+              {" "}
+              Welcome,
+              <span>{user as string}</span>
+            </pre>
+          )}
+        </div>
+        {/* {photo && <img src={photo} alt="dp" width={30} height={30} />} */}
+        {hasUser && <button onClick={() => logoutHandler()}>Logout</button>}
+        {!hasUser && (
+          <button onClick={() => openModal()}>Register / Login</button>
+        )}
+      </section>
     </Wrapper>
   );
 };
@@ -37,6 +45,22 @@ const Wrapper = styled.div`
   background: black;
   font-size: larger;
   color: white;
+  section {
+    display: flex;
+
+    pre {
+      color: #aae63a;
+      padding: 0 1rem;
+      display: flex;
+
+      span {
+        font-size: 1rem;
+        padding: 0 3rem;
+        color: red;
+        font-weight: 900;
+      }
+    }
+  }
 
   span {
     color: #aae63a;
