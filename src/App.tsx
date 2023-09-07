@@ -1,14 +1,11 @@
 import styled from "styled-components";
 import Header from "./components/Header";
-import Todo from "./components/Todos/Todo";
 
 const App = () => {
   return (
     <Main>
       <Header />
-      <Section>
-        <Todo />
-      </Section>
+      <Section></Section>
     </Main>
   );
 };
