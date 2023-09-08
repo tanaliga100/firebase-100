@@ -16,9 +16,10 @@ export interface IAuthContext {
   signInHandler: (email: string, password: string) => void;
   logoutHandler: () => void;
   googleSignInHandler: () => void;
-  error?: unknown | string;
+  error?: AuthError;
   photo: unknown | string;
 }
+type AuthError = Error | null | string;
 
 const AuthContext = createContext<IAuthContext | undefined>(undefined);
 
@@ -38,7 +39,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const [photo, setPhoto] = useState<unknown | string>("");
   const [authLoading, setAuthLoading] = useState(false);
   const [hasUser, setHasUser] = useState(false);
-  const [error, setError] = useState<unknown | string>(null);
+  const [error, setError] = useState<AuthError>(null);
 
   React.useEffect(() => {
     setAuthLoading(true);
@@ -46,16 +47,18 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       if (!currentUser) {
         console.log("No User");
       } else {
-        console.log("current User", currentUser);
+        console.log("current User", currentUser.email);
 
         setUser(currentUser.email);
         setAuthLoading(false);
         setHasUser(true);
       }
     });
-    return () => listen();
-  }, [auth.onAuthStateChanged]);
 
+    return () => listen();
+  }, []);
+
+  // GOOGLE SIGN IN
   async function googleSignInHandler() {
     const provider = new GoogleAuthProvider();
 
@@ -65,27 +68,29 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       console.log("Signed in with google" + user);
       setPhoto(user.photoURL);
     } catch (error) {
-      setError(error);
+      setError(error as AuthError);
       throw new Error("Google Error" + error);
     }
   }
 
+  // SIGN UP
   async function signUpHandler(email: string, password: string) {
     try {
-      const curr = await createUserWithEmailAndPassword(auth, email, password);
-      console.log("current User", curr.user);
+      await createUserWithEmailAndPassword(auth, email, password);
     } catch (error) {
-      setError(error);
+      setError(error as AuthError);
       throw new Error("Registering Error" + error);
     }
   }
+
+  // SIGN IN
+
   async function signInHandler(email: string, password: string) {
     try {
       const curr = await signInWithEmailAndPassword(auth, email, password);
       console.log("signed User", curr.user);
-    } catch (error: unknown) {
-      setError(error);
-
+    } catch (error) {
+      setError(error as AuthError);
       throw new Error("Signing Error" + error);
     }
   }
@@ -96,7 +101,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }
 
   // bundled
-  const values = {
+  const values: IAuthContext = {
     user: user,
     photo: photo,
     authLoading: authLoading,

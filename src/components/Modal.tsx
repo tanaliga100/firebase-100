@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { useAuth } from "../context/AuthContext";
 import { useModal } from "../context/ModalContext";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
@@ -29,6 +30,8 @@ const ModalContent = styled.div`
 
 const Modal: React.FC = () => {
   const { closeModal, isOpen, isSignIn } = useModal();
+  const { error } = useAuth();
+  console.log("from error", error);
 
   return (
     <>
@@ -37,6 +40,7 @@ const Modal: React.FC = () => {
           <ModalContent onClick={(e) => e.stopPropagation()}>
             <div>
               {/* Modal content goes here */}
+              {/* {error && <p>{error}</p>} */}
               {isSignIn ? <SignIn /> : <SignUp />}
               <SignWithGoogle />
             </div>

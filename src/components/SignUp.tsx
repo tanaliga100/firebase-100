@@ -47,10 +47,7 @@ const SignUp = () => {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    // Handle form submission here
 
-    console.log("Email:", email);
-    console.log("Passwodr:", password);
     await signUpHandler(email, password);
 
     setEmail("");

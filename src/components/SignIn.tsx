@@ -49,8 +49,7 @@ const SignIn = () => {
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     // Handle form submission here
-    console.log("Email:", email);
-    console.log("Password:", password);
+
 
     await signInHandler(email, password);
     setEmail("");
