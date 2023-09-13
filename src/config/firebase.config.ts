@@ -6,7 +6,16 @@ import { getStorage } from "firebase/storage";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
+// onAuthStateChanged(auth, (user) => {
+//   if (user === null) {
+//     console.log("No User");
+//   } else {
+//     console.log(user);
+//     return user;
+//   }
+// });
 // Your web app's Firebase configuration
+
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
   authDomain: "fir-101-1c18f.firebaseapp.com",
@@ -34,7 +43,6 @@ onAuthStateChanged(auth, (user) => {
   if (user === null) {
     console.log("No User");
   } else {
-    console.log(user);
     return user;
   }
 });

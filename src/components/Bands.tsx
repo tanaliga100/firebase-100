@@ -67,20 +67,12 @@
 // };
 // export default Bands;
 
-import {
-  deleteDoc,
-  doc,
-  getDocs,
-  onSnapshot,
-  query,
-  updateDoc,
-  where,
-} from "firebase/firestore";
+import { deleteDoc, doc, updateDoc } from "firebase/firestore";
 
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { bandsRef } from "../config/firebase.config";
-import Search from "./Search";
+import { currentState } from "./Services";
 
 interface Band {
   id: string;
@@ -92,27 +84,21 @@ interface Band {
 
 const Bands = () => {
   const [bands, setBands] = useState<Band[]>([]);
+  const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
 
   useEffect(() => {
-    const unsubscribe = onSnapshot(bandsRef, (snapshot) => {
-      try {
-        const bandsData: Band[] = snapshot.docs.map((doc) => ({
-          id: doc.id,
-          ...doc.data(),
-        }));
-        setBands(bandsData);
-        setLoading(false);
-        setError(null);
-      } catch (err: any) {
-        setError(err.message);
-        setLoading(false);
+    const unSubscribe = currentState((data: any) => {
+      console.log("Data retrieves", data);
+      if (Array.isArray(data)) {
+        setBands(data);
+      } else {
+        setPrompt(data);
       }
     });
-
-    return () => unsubscribe();
+    return () => unSubscribe;
   }, []);
 
   // delete bands
@@ -143,56 +129,32 @@ const Bands = () => {
     }
   }
 
-  async function searchBands() {
-    try {
-      const q = query(bandsRef, where("name", "==", searchTerm.toLowerCase()));
-      const querySnap = await getDocs(q);
-
-      const foundBands: Band[] = querySnap.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      +-setBands(foundBands);
-    } catch (error) {
-      console.log(error);
-    }
-  }
-
-  useEffect(() => {
-    if (searchTerm === "") {
-      setBands([]); // Clear the bands list
-    } else {
-      searchBands(); // Perform the search
-    }
-  }, [searchTerm]);
-
-  console.log("search functionalities", searchTerm);
-
   return (
     <Wrapper>
       <p>List of Bands</p>
-      <Search
-        searchTerm={searchTerm}
-        setSearchTerm={setSearchTerm}
-        placeholder="Search for bands"
-      />
-      <List>
-        {bands.map((band) => (
-          <li key={band.id}>
-            <pre>
-              Name: {band.name} - Grammy: {String(band.grammy)} - Members:{" "}
-              {band.members}
-            </pre>
 
-            <Actions>
-              <button onClick={() => handleDelete(band.id)}>
-                Delete this bands
-              </button>
-              <button onClick={() => updateHandler(band.id)}>Update Doc</button>
-            </Actions>
-          </li>
-        ))}
-      </List>
+      {prompt ? (
+        <h3>{prompt}</h3>
+      ) : (
+        <List>
+          {bands.map((band) => (
+            <li key={band.id}>
+              <pre>
+                {band.name} {String(band.grammy)} {band.members}
+              </pre>
+
+              <Actions>
+                <button onClick={() => handleDelete(band.id)}>
+                  Delete this bands
+                </button>
+                <button onClick={() => updateHandler(band.id)}>
+                  Update Doc
+                </button>
+              </Actions>
+            </li>
+          ))}
+        </List>
+      )}
     </Wrapper>
   );
 };
@@ -209,7 +171,14 @@ const List = styled.div`
   margin: 0 auto;
   display: flex;
   flex-direction: column;
+  width: 80%;
+  background-color: black;
   gap: 1rem;
+
+  pre {
+    flex-grow: 1;
+    justify-content: space-around;
+  }
 
   li {
     display: flex;
@@ -217,6 +186,5 @@ const List = styled.div`
 `;
 const Actions = styled.div`
   display: flex;
-  gap: 1rem;
   flex-direction: row;
 `;

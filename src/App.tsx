@@ -8,7 +8,6 @@ const App = () => {
     <Main>
       <Header />
       <AddBook />
-
       <Bands />
     </Main>
   );

@@ -1,7 +1,14 @@
-import { addDoc } from "firebase/firestore";
 import { FormEvent, useState } from "react";
 import styled from "styled-components";
-import { bandsRef } from "../config/firebase.config";
+import { addBands } from "./Services";
+
+export interface IBandsData {
+  name: string;
+  id?: string;
+  founded: number;
+  grammy: boolean;
+  members: number;
+}
 
 const AddBook = () => {
   const [formData, setFormData] = useState({
@@ -12,7 +19,6 @@ const AddBook = () => {
   });
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setFormData({ name: "", founded: 0, grammy: false, members: 0 });
 
     // logic
     const { name, founded, grammy, members } = formData;
@@ -20,7 +26,9 @@ const AddBook = () => {
       alert("All Fields are required");
       return;
     }
-    await addDoc(bandsRef, formData);
+    // handle submit
+    await addBands(formData);
+    setFormData({ name: "", founded: 0, grammy: false, members: 0 });
     setTimeout(() => {
       alert("Bands Added");
     }, 300);
@@ -36,7 +44,6 @@ const AddBook = () => {
     <>
       <form action="" onSubmit={handleSubmit}>
         <Form>
-          <label htmlFor="">Band Name</label>
           <input
             type="text"
             name="name"
@@ -45,7 +52,6 @@ const AddBook = () => {
             onChange={handleChange}
             value={formData.name}
           />
-          <label htmlFor="">Founded</label>
           <input
             type="number"
             name="founded"
@@ -53,8 +59,7 @@ const AddBook = () => {
             placeholder="Date Founded"
             onChange={handleChange}
             value={formData.founded}
-          />{" "}
-          <label htmlFor="">has Grammy</label>
+          />
           <input
             type="checkbox"
             name="grammy"
@@ -63,7 +68,6 @@ const AddBook = () => {
             onChange={handleChange}
             checked={formData.grammy as boolean}
           />
-          <label htmlFor="">Members</label>
           <input
             type="number"
             name="members"
@@ -82,9 +86,16 @@ export default AddBook;
 
 const Form = styled.div`
   display: flex;
+  width: 50%;
   padding: 2px 3rem;
+  padding-top: 1rem;
+  margin: 0 auto;
   flex-direction: column;
   gap: 0.3rem;
+
+  input {
+    padding: 0.5rem;
+  }
 
   button {
     color: teal;

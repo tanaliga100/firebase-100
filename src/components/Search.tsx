@@ -14,6 +14,7 @@ const Search: React.FC<IProps> = ({
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newSearchTerm = e.currentTarget.value;
     if (setSearchTerm) {
+      2;
       setSearchTerm(newSearchTerm);
     }
   };
