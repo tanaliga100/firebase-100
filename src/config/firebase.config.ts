@@ -1,20 +1,10 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth } from "firebase/auth";
 import { collection, getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
-
-// onAuthStateChanged(auth, (user) => {
-//   if (user === null) {
-//     console.log("No User");
-//   } else {
-//     console.log(user);
-//     return user;
-//   }
-// });
-// Your web app's Firebase configuration
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
@@ -37,12 +27,3 @@ export const storage = getStorage(app);
 export const bandsRef = collection(db, "bands");
 export const ordersRef = collection(db, "orders");
 export const specialOfTheDayRef = collection(db, "specialOfTheDay");
-
-// UTILS
-onAuthStateChanged(auth, (user) => {
-  if (user === null) {
-    console.log("No User");
-  } else {
-    return user;
-  }
-});

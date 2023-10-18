@@ -26,6 +26,7 @@ const AddBook = () => {
       alert("All Fields are required");
       return;
     }
+
     // handle submit
     await addBands(formData);
     setFormData({ name: "", founded: 0, grammy: false, members: 0 });
