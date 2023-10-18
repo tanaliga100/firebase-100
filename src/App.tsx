@@ -16,19 +16,11 @@ const App = () => {
       <p>Current Theme: {ctx.theme}</p>
       <button onClick={ctx.toggleTheme}>Toggle Theme</button>
     </div>
-=======
-
-const App = () => {
-  return (
-    <Main>
-      <Header />
-    </Main>
-
   );
 };
+
 export default App;
 
 const Main = styled.main`
   font-size: larger;
 `;
-
