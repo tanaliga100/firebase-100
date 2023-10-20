@@ -13,24 +13,18 @@ import { MdDarkMode, MdOutlineDarkMode } from "react-icons/md";
 const Header: React.FC<IProps> = () => {
   const { toggleTheme, theme } = useTheme();
 
-interface IProps {}
-
-const Header: React.FC<IProps> = () => {
-
   return (
-    <Wrapper theme={theme} className={`app ${theme}`}>
+    <Wrapper theme={theme}>
       <h1>
-
-        FIrebase + <span>FireStore</span>
+        Firebase + <span className="">FireStore</span>
       </h1>
       <button onClick={toggleTheme}>
         {theme === "light" ? (
-          <MdDarkMode size={25} />
+          <MdDarkMode size={10} />
         ) : (
-          <MdOutlineDarkMode size={25} />
+          <MdOutlineDarkMode size={10} />
         )}
       </button>
-
     </Wrapper>
   );
 };
@@ -39,12 +33,17 @@ export default Header;
 
 const Wrapper = styled.div<{ theme: string }>`
   display: flex;
-  padding: 4rem;
   flex-direction: row;
   align-items: center;
-  padding: 0 1rem;
+  padding: 0 0.3rem;
+  font-weight: 900;
   justify-content: space-between;
-  font-size: larger;
-  background-color: ${(props) => (props.theme === "light" ? "dark" : "light")};
+  font-size: small;
+  /* background-color: ${(props) =>
+    props.theme === "light" ? "dark" : "light"};
   color: ${(props) => (props.theme === "light" ? "dark" : "light")};
+
+  span {
+    color: ${(props) => (props.theme === "light" ? "purple" : "white")};
+    transition: color 1s; */
 `;

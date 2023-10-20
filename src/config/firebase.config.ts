@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
+import { collection, getFirestore } from "firebase/firestore";
 import { getStorage } from "firebase/storage";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -24,12 +24,25 @@ export const auth = getAuth(app);
 export const db = getFirestore(app);
 export const storage = getStorage(app);
 
+// COLLECTIONS
+export const booksCollection = collection(db, "books");
+
 // UTILS
-onAuthStateChanged(auth, (user) => {
-  if (user === null) {
-    console.log("No User");
-  } else {
-    console.log(user);
-    return user;
-  }
-});
+// onAuthStateChanged(auth, (user) => {
+//   if (user === null) {
+//     console.log("No User");
+//   } else {
+//     console.log(user);
+//     return user;
+//   }
+// });
+
+// GETTING ALL COLLECTIONS
+// export const getAllColls = async () => {
+//   const colls: ((options?: SnapshotOptions | undefined) => DocumentData)[] = [];
+
+//   const qSnap = await getDocs(collection(db, "books"));
+//   qSnap.forEach((doc) => colls.push(doc.data));
+
+//   return colls;
+// };

@@ -1,207 +1,122 @@
-import {
-  addDoc,
-  collection,
-  deleteDoc,
-  doc,
-  getDocs,
-  onSnapshot,
-  updateDoc,
-} from "firebase/firestore";
-import React, { useEffect, useState } from "react";
-import { MdDelete } from "react-icons/md";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
-import { db } from "../../config/firebase.config";
+import { useCrudBooks } from "../../hooks/useCrudBooks";
+import Form from "./Form";
 
-interface Todo {
+export interface IBook {
   id?: string;
-  title?: string;
-  completed?: boolean;
+  name: string;
+  author: string;
 }
+const Todo = () => {
+  // HOOKS
+  const { deleteBookHandler, getAllBooks } = useCrudBooks();
+  const [books, setBooks] = useState<IBook[]>([]);
+  const [showModal, setShowModal] = useState<boolean>(false);
 
-const App: React.FC = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
-  const [newTodo, setNewTodo] = useState<string>("");
-  const [searchTerm, setSearchTerm] = useState<string>("");
-  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  // GETTING ALL THE DOCUMENTS HERE...
+  //   useEffect(() => {
+  //     const unsubscribe = onSnapshot(booksCollection, (snapshots) => {
+  //       if (!snapshots.empty) {
+  //         const books: IBook[] = [];
+  //         snapshots.docs.forEach((book) => {
+  //           books.push({
+  //             id: book.id,
+  //             name: book.data().name,
+  //             author: book.data().author,
+  //           });
+  //         });
+  //         setBooks(books);
+  //       }
+  //     });
+  //     return () => unsubscribe();
+  //   }, []);
 
+  // SIMULATION
   useEffect(() => {
-    const unsubscribe = onSnapshot(collection(db, "todos"), (snapshot) => {
-      const updatedTodos: Todo[] = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data(),
-      }));
-      setTodos(updatedTodos);
-    });
-
-    return () => unsubscribe();
+    getAllBooks();
   }, []);
 
-  const addTodo = async () => {
-    if (newTodo.trim() === "") return;
-    const todoData = {
-      title: newTodo,
-      completed: false,
-    };
-    await addDoc(collection(db, "todos"), todoData);
-    setNewTodo("");
-  };
-
-  const deleteTodo = async (id: string | undefined) => {
-    await deleteDoc(doc(db, "todos", id));
-  };
-
-  const toggleCompletion = async (id: string) => {
-    const todoRef = doc(db, "todos", id);
-    const todoSnapshot = await getDocs<unknown>(todoRef);
-    if (!todoSnapshot.exists()) return;
-
-    const todoData = todoSnapshot.data();
-    await updateDoc(todoRef, { completed: !todoData.completed });
-  };
-
-  const filteredTodos = todos.filter((todo) =>
-    todo.title.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  // ADDING DOCUMENTS HERE...
+  // DELETING DOCUMENT HERE...
+  // EARLY  RETURN
 
   return (
-    <Container>
-      <h1>Todo App</h1>
-      <Controls>
-        <SearchInput
-          type="text"
-          placeholder="Search todos by title"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-        />
-        <AddTodoForm
-          onSubmit={(e) => {
-            e.preventDefault();
-            addTodo();
-          }}
-        >
-          <input
-            type="text"
-            placeholder="Add a new todo"
-            value={newTodo}
-            onChange={(e) => setNewTodo(e.target.value)}
-          />
-          <AddButton type="submit">Add</AddButton>
-        </AddTodoForm>
-      </Controls>
-      <TodoList>
-        {filteredTodos.map((todo) => (
-          <TodoItem key={todo.id}>
-            <TodoText
-              completed={todo.completed}
-              onClick={() => toggleCompletion(todo.id)}
-            >
-              {todo.title}
-            </TodoText>
-            <DeleteButton onClick={() => deleteTodo(todo.id)}>
-              <MdDelete />
-            </DeleteButton>
-          </TodoItem>
-        ))}
-      </TodoList>
-      {isModalOpen && (
-        <Modal>
-          <ModalContent>
-            <h2>This is a Modal</h2>
-            <p>Modal content goes here.</p>
-            <CloseButton onClick={() => setIsModalOpen(false)}>
-              Close
-            </CloseButton>
-          </ModalContent>
-        </Modal>
-      )}
-    </Container>
+    <Wrapper>
+      <h1>
+        {books.length === 0 && <pre>No Books are listed in the database</pre>}
+      </h1>
+      <button onClick={() => setShowModal(true)}>Add Book</button>
+      <ModalOverlay isOpen={showModal}>
+        <ModalContent>
+          <CloseButton onClick={() => setShowModal(false)}>&times;</CloseButton>
+          <Form closeModal={() => setShowModal(false)} />
+        </ModalContent>
+      </ModalOverlay>
+      <Chart>
+        {books &&
+          books.map((book) => (
+            <Card key={book?.id}>
+              <pre>{book?.id?.slice(0, 10)}...</pre>
+              <pre>{book?.name}</pre>
+              <p>{book?.author}</p>
+              <button onClick={() => book?.id && deleteBookHandler(book?.id)}>
+                Delete
+              </button>
+            </Card>
+          ))}
+      </Chart>
+    </Wrapper>
   );
 };
 
-const Container = styled.div`
-  font-family: Arial, sans-serif;
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
+export default Todo;
+const Wrapper = styled.div``;
+const Chart = styled.div`
+  max-height: 50vh;
+  width: 100%;
+  margin-top: 1rem;
+  overflow-y: auto;
+  background-color: #fff; /* Set the background to white */
+  position: relative; /* Necessary for z-index to work */
+  z-index: 1; /* Put the Chart "under" other content */
 `;
-
-const Controls = styled.div`
+const Card = styled.div`
   display: flex;
-  justify-content: space-between;
+  padding: 0 4rem 0 0;
+  flex: 1;
   align-items: center;
-  margin-bottom: 20px;
-`;
-
-const SearchInput = styled.input`
-  flex-grow: 1;
-  padding: 5px;
-  font-size: 16px;
-`;
-
-const AddTodoForm = styled.form`
-  display: flex;
-  gap: 10px;
-`;
-
-const AddButton = styled.button`
-  background-color: #0074d9;
-  color: white;
-  border: none;
-  padding: 8px 12px;
-  cursor: pointer;
-`;
-
-const TodoList = styled.ul`
-  list-style: none;
-  padding: 0;
-`;
-
-const TodoItem = styled.li`
-  display: flex;
   justify-content: space-between;
+  color: #01112e;
+`;
+
+const ModalOverlay = styled.div<{ isOpen: boolean }>`
+  display: ${(props) => (props.isOpen ? "flex" : "none")};
   align-items: center;
-  margin: 5px 0;
-`;
-
-const TodoText = styled.span<{ completed: boolean }>`
-  flex-grow: 1;
-  cursor: pointer;
-  text-decoration: ${(props) => (props.completed ? "line-through" : "none")};
-`;
-
-const DeleteButton = styled.button`
-  background-color: #ff4136;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-`;
-
-const Modal = styled.div`
+  justify-content: center;
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  z-index: 2;
 `;
 
 const ModalContent = styled.div`
-  background-color: white;
-  border-radius: 8px;
+  background-color: #fff;
   padding: 20px;
-  box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+  min-width: 30%;
+  border-radius: 5px;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+  position: relative;
 `;
 
-const CloseButton = styled.button`
-  background-color: transparent;
-  border: none;
+const CloseButton = styled.span`
+  position: absolute;
+  top: 10px;
+  right: 10px;
   cursor: pointer;
-  font-size: 16px;
-  color: #888;
+  font-size: 20px;
+  color: #333;
 `;
-
-export default App;
