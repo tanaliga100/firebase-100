@@ -1,6 +1,4 @@
 import styled from "styled-components";
-import AddBook from "./components/AddBook";
-import Bands from "./components/Bands";
 import Header from "./components/Header";
 import Todo from "./components/Todos/Todo";
 import { useTheme } from "./context/ThemeContext";
@@ -15,11 +13,6 @@ const App = () => {
         <Todo />
       </Section>
     </div>
-
-      <AddBook />
-      <Bands />
-    </Main>
-
   );
 };
 
