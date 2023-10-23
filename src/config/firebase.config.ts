@@ -6,7 +6,6 @@ import { getStorage } from "firebase/storage";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
-// Your web app's Firebase configuration
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_API_KEY,
   authDomain: "fir-101-1c18f.firebaseapp.com",
@@ -47,3 +46,8 @@ export const ordersCollectionRef = collection(db, "orders");
 
 //   return colls;
 // };
+// COLLECTION REFERENCES
+export const bandsRef = collection(db, "bands");
+export const ordersRef = collection(db, "orders");
+export const specialOfTheDayRef = collection(db, "specialOfTheDay");
+

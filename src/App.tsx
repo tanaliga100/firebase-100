@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import AddBook from "./components/AddBook";
+import Bands from "./components/Bands";
 import Header from "./components/Header";
 import Todo from "./components/Todos/Todo";
 import { useTheme } from "./context/ThemeContext";
@@ -8,10 +10,16 @@ const App = () => {
   return (
     <div className={`app ${theme}`}>
       <Header />
+
       <Section theme={theme}>
         <Todo />
       </Section>
     </div>
+
+      <AddBook />
+      <Bands />
+    </Main>
+
   );
 };
 
