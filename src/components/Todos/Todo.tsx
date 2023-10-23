@@ -1,52 +1,50 @@
+import { getDocs } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import styled from "styled-components";
+import { booksCollectionRef } from "../../config/firebase.config";
 import { useCrudBooks } from "../../hooks/useCrudBooks";
 import Form from "./Form";
+import { Search } from "./Search";
 
 export interface IBook {
   id?: string;
   name: string;
   author: string;
 }
+
 const Todo = () => {
   // HOOKS
-  const { deleteBookHandler, getAllBooks } = useCrudBooks();
-  const [books, setBooks] = useState<IBook[]>([]);
+  const { deleteBookHandler } = useCrudBooks();
   const [showModal, setShowModal] = useState<boolean>(false);
+  const [books, setBooks] = useState<IBook[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  // GETTING ALL THE DOCUMENTS HERE...
-  //   useEffect(() => {
-  //     const unsubscribe = onSnapshot(booksCollection, (snapshots) => {
-  //       if (!snapshots.empty) {
-  //         const books: IBook[] = [];
-  //         snapshots.docs.forEach((book) => {
-  //           books.push({
-  //             id: book.id,
-  //             name: book.data().name,
-  //             author: book.data().author,
-  //           });
-  //         });
-  //         setBooks(books);
-  //       }
-  //     });
-  //     return () => unsubscribe();
-  //   }, []);
+  //   GETTING ALL THE DOCUMENTS HERE...
 
   // SIMULATION
-  useEffect(() => {
-    getAllBooks();
-  }, []);
+  getDocs(booksCollectionRef).then((snapshot) => {
+    const listOfBooks: IBook[] = [];
+    snapshot.docs.forEach((data) => {
+      setLoading(true);
+      const booksId = data.id;
+      const books = data.data();
+      listOfBooks.push({ id: booksId, name: books.name, author: books.author });
+      setBooks(listOfBooks);
+      setLoading(false);
+    });
+  });
 
-  // ADDING DOCUMENTS HERE...
+  useEffect(() => {}, []);
   // DELETING DOCUMENT HERE...
   // EARLY  RETURN
 
   return (
     <Wrapper>
-      <h1>
-        {books.length === 0 && <pre>No Books are listed in the database</pre>}
-      </h1>
-      <button onClick={() => setShowModal(true)}>Add Book</button>
+      <h1>{loading && <pre>Loading...</pre>}</h1>
+      <Actions>
+        <button onClick={() => setShowModal(true)}>Add Book</button>
+        <Search />
+      </Actions>
       <ModalOverlay isOpen={showModal}>
         <ModalContent>
           <CloseButton onClick={() => setShowModal(false)}>&times;</CloseButton>
@@ -71,13 +69,20 @@ const Todo = () => {
 };
 
 export default Todo;
+const Actions = styled.div`
+  display: flex;
+  flex: 1;
+  width: 100%;
+  justify-content: space-between;
+  background-color: #0300178c;
+  padding: 1rem;
+`;
 const Wrapper = styled.div``;
 const Chart = styled.div`
   max-height: 50vh;
   width: 100%;
   margin-top: 1rem;
   overflow-y: auto;
-  background-color: #fff; /* Set the background to white */
   position: relative; /* Necessary for z-index to work */
   z-index: 1; /* Put the Chart "under" other content */
 `;
@@ -87,7 +92,6 @@ const Card = styled.div`
   flex: 1;
   align-items: center;
   justify-content: space-between;
-  color: #01112e;
 `;
 
 const ModalOverlay = styled.div<{ isOpen: boolean }>`
