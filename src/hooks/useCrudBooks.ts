@@ -1,35 +1,39 @@
-import { addDoc, deleteDoc, doc, onSnapshot } from "firebase/firestore";
+import { addDoc, deleteDoc, doc } from "firebase/firestore";
 import { toast } from "react-toastify";
 import { IBook } from "../components/Todos/Todo";
-import { booksCollection, db } from "../config/firebase.config";
+import { booksCollectionRef, db } from "../config/firebase.config";
 
 export const useCrudBooks = () => {
   // GETTING ALL THE BOOKS || REALTIME !!!
 
-  const getAllBooks = () => {
-    onSnapshot(booksCollection, (snapshots) => {
-      if (!snapshots.empty) {
-        const books: IBook[] = [];
-        snapshots.docs.forEach((book) => {
-          books.push({
-            id: book.id,
-            name: book.data().name,
-            author: book.data().author,
-          });
-        });
-        return books;
-      }
-    });
-  };
+  //   const getAllBooks = () => {
+  //     onSnapshot(booksCollection, (snapshots) => {
+  //       if (!snapshots.empty) {
+  //         const books: IBook[] = [];
+  //         snapshots.docs.forEach((book) => {
+  //           books.push({
+  //             id: book.id,
+  //             name: book.data().name,
+  //             author: book.data().author,
+  //           });
+  //         });
+  //         setBooks(books);
+  //         return books;
+  //       }
+  //     });
+  //   };
 
   // ADDING A BOOK
   const addBookHandler = async (data: IBook) => {
     // sanitize the data
-    await addDoc(booksCollection, data);
+    console.log("BOOK TO ADD", data);
+
+    await addDoc(booksCollectionRef, data);
     toast.success("Books Addded", {
       position: "bottom-left",
       autoClose: 300,
-      theme: "light",
+      theme: "dark",
+      type: "default",
       hideProgressBar: true,
     });
   };
@@ -41,12 +45,18 @@ export const useCrudBooks = () => {
     toast.success("Books Deleted", {
       position: "bottom-left",
       autoClose: 300,
-      theme: "light",
+      theme: "dark",
+      type: "default",
       hideProgressBar: true,
     });
   };
 
-  return { addBookHandler, getAllBooks, deleteBookHandler };
+  // SEARCHING THE BOOK
+  const searchHandler = async (input: string) => {
+    console.log("from hooks", input);
+  };
+
+  return { addBookHandler, deleteBookHandler, searchHandler };
 };
 
 // snapshots) => {

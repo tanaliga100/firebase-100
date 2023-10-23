@@ -25,7 +25,8 @@ export const db = getFirestore(app);
 export const storage = getStorage(app);
 
 // COLLECTIONS
-export const booksCollection = collection(db, "books");
+export const booksCollectionRef = collection(db, "books");
+export const ordersCollectionRef = collection(db, "orders");
 
 // UTILS
 // onAuthStateChanged(auth, (user) => {

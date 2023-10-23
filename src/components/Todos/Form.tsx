@@ -22,7 +22,6 @@ const Form: React.FC<IProps> = ({ closeModal }) => {
       setTimeout(() => closeModal(), 500);
     }
   };
-
   return (
     <FormWrapper>
       <h5>Add A Book</h5>{" "}
